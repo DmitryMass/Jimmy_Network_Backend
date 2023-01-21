@@ -74,14 +74,13 @@ export const getUserPosts = async (req, res) => {
     const post = await Post.find({ userId });
     return res.status(200).send(post.reverse());
   } catch (err) {
-    return res.status(404).send({ msg: 'User Posts not found' });
+    return res.status(401).send({ msg: 'User Posts not found' });
   }
 };
 
 export const likedPost = async (req, res) => {
   try {
     const { id } = req.params;
-    console.log(id);
     const { userId } = req.body;
     const post = await Post.findById(id);
     const isLiked = post?.likes?.get(userId);
@@ -100,5 +99,17 @@ export const likedPost = async (req, res) => {
     return res.status(200).send(updatedPost);
   } catch (err) {
     return res.status(401).send({ msg: 'Like request was failed' });
+  }
+};
+
+export const deletePost = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const post = await Post.findById(id);
+    if (!post) return res.status(403).send({ msg: 'post id not found' });
+    await post.remove();
+    return res.status(200).send({ msg: 'ok' });
+  } catch (err) {
+    return res.status(401).send({ msg: 'Post doesnt delete' });
   }
 };

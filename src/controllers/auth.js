@@ -69,11 +69,11 @@ export const login = async (req, res) => {
     const { email, password } = req.body;
     const user = await User.findOne({ email });
     if (!user) {
-      return res.status(500).send({ msg: `User doesn't exist.` });
+      return res.status(404).send({ msg: `User doesn't exist.` });
     }
     const checkPassword = await compare(password, user.password);
     if (!checkPassword) {
-      return res.status(500).send({ msg: 'Bad credentials.' });
+      return res.status(401).send({ msg: 'Bad credentials.' });
     }
 
     const token = sign({ id: user._id }, process.env.SECRET_KEY);
@@ -83,6 +83,6 @@ export const login = async (req, res) => {
       user,
     });
   } catch (e) {
-    return res.status(500).send({ msg: `${e} - Error Login.` });
+    return res.status(404).send({ msg: `${e} - Error Login.` });
   }
 };

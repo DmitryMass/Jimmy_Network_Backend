@@ -22,7 +22,8 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // config
-mongoose.set('strictQuery', false);
+// mongoose.set('strictQuery', false);
+
 const app = express();
 app.use(
   fileUpload({
@@ -56,10 +57,7 @@ app.use(
 
 const start = async () => {
   try {
-    mongoose.connect(process.env.MONGO_DB, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
+    await mongoose.connect(process.env.MONGO_DB);
     app.listen(process.env.PORT || 3005, () => {
       console.log(`Server started on port ${process.env.PORT}`);
     });
